@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Verificación de Certificados</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary-color: #004d80;
+      --secondary-color: #0080c0;
+      --accent-color: #00a86b;
+      --danger-color: #c0392b;
+      --bg-color: #f4f6f9;
+      --card-bg: #ffffff;
+      --border-radius: 8px;
+      --shadow: 0 2px 6px rgba(0,0,0,0.08);
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background: var(--bg-color);
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: #fff;
+      padding: 1.5rem 1rem;
+    }
+
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .site-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .site-subtitle {
+      margin: 0;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 1.5rem auto 2rem;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+    }
+
+    .card + .card {
+      margin-top: 1.25rem;
+    }
+
+    h1 {
+      font-size: 1.3rem;
+      margin: 0 0 0.5rem;
+      color: var(--primary-color);
+    }
+
+    .help-text {
+      margin: 0 0 1rem;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border-radius: 999px;
+      padding: 0.1rem 0.6rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .status-success {
+      background: rgba(0,168,107,0.1);
+      color: var(--accent-color);
+    }
+
+    .status-error {
+      background: rgba(192,57,43,0.12);
+      color: var(--danger-color);
+    }
+
+    .status-neutral {
+      background: #ecf0f1;
+      color: #7f8c8d;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.75rem 1.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .result-item-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #7f8c8d;
+    }
+
+    .result-item-value {
+      font-size: 0.98rem;
+      font-weight: 500;
+      margin-top: 0.1rem;
+    }
+
+    .result-heading {
+      margin-top: 0.75rem;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #2c3e50;
+    }
+
+    .result-message {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .muted {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 0.4rem;
+    }
+
+    footer {
+      border-top: 1px solid #dfe4ea;
+      padding: 0.9rem 1rem 1.4rem;
+      font-size: 0.8rem;
+      color: #7f8c8d;
+      background: #f8f9fb;
+    }
+
+    footer .footer-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    @media (min-width: 600px) {
+      header {
+        padding: 1.8rem 1rem;
+      }
+      h1 {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <img src="Bolivia.jpg" alt="Logo institucional" style="height:150px; width:auto;">
+    <div>
+      <p class="site-title">Verificación de Certificados</p>
+      <p class="site-subtitle">Consulta de certificados de idioma originario</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Bloque de información fija (sin formulario) -->
+  <section class="card">
+    <h1>Resultado de la verificación</h1>
+    <div id="resultadoContenido"></div>
+    <p class="muted">
+      Verificar de manera física y digital la autenticidad del presente certificado
+    </p>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>Verificación de Certificados de Idiomas.</span>
+    <span>Ministerio de Gobierno del Estado Plurinacional de Bolivia.</span>
+  </div>
+</footer>
+
+<script>
+  // Certificado de ejemplo que queremos mostrar directamente
+  const certificado = {
+    codigo: "0261668822029",
+    nombres: "NIVER JUAN CHOQUE GUTIERREZ",
+    ci: "5763263 OR.",
+    curso: "CURSO BÁSICO DE IDIOMA ORIGINARIO",
+    idioma_nacion: "QUECHUA - TOMÁS KATARI-KURUSA LLAWI",
+    estado: "APROBADO",
+    fecha_emision: "2025-06-15",
+    emisor: "Verificación de Certificados"
+  };
+
+  const resultadoContenido = document.getElementById("resultadoContenido");
+
+  function mostrarCertificado(cert) {
+    const esAprobado = cert.estado.toUpperCase() === "APROBADO";
+
+    resultadoContenido.innerHTML = `
+      <div class="result-heading">
+        Resultado de la verificación
+        <span class="status-pill ${esAprobado ? "status-success" : "status-neutral"}">
+          ${cert.estado.toUpperCase()}
+        </span>
+      </div>
+
+      <div class="result-grid">
+        <div>
+          <div class="result-item-label">Nombres y apellidos</div>
+          <div class="result-item-value">${cert.nombres}</div>
+        </div>
+        <div>
+          <div class="result-item-label">Cédula de identidad</div>
+          <div class="result-item-value">${cert.ci}</div>
+        </div>
+        <div>
+          <div class="result-item-label">Curso</div>
+          <div class="result-item-value">${cert.curso}</div>
+        </div>
+        <div>
+          <div class="result-item-label">Idioma / Nación</div>
+          <div class="result-item-value">${cert.idioma_nacion}</div>
+        </div>
+        <div>
+          <div class="result-item-label">Código de certificado</div>
+          <div class="result-item-value">${cert.codigo}</div>
+        </div>
+        <div>
+          <div class="result-item-label">Fecha de emisión</div>
+          <div class="result-item-value">${cert.fecha_emision}</div>
+        </div>
+        <div>
+          <div class="result-item-label">Entidad emisora</div>
+          <div class="result-item-value">${cert.emisor}</div>
+        </div>
+      </div>
+
+      <p class="result-message">
+        Si la información mostrada coincide con los datos del certificado presentado de forma física o digital,
+        se considera que el documento es válido y fue emitido por la entidad indicada.
+      </p>
+    `;
+  }
+
+  // Al cargar la página, mostramos inmediatamente el certificado
+  window.addEventListener("DOMContentLoaded", () => {
+    mostrarCertificado(certificado);
+  });
+</script>
+
+</body>
+</html>
